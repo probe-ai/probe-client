@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  probe_client:
+    build: .
+    restart: always
+    container_name: probe_client
+    ports:
+      - "3003:3003"
