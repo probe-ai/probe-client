@@ -18,7 +18,8 @@ probe.ai docker client to run in your own environment.
 
 Here's an example of bigquery values needed in the .env file that you can find on your bigquery project:
 
-<img width="793" alt="probe-ai" src="https://user-images.githubusercontent.com/30016913/219969290-ccf8a96f-e4e2-4b4c-80f5-9ff81ed8531c.png">
+![dddl](https://user-images.githubusercontent.com/30016913/219969360-1f7039b5-5b6e-483b-ac11-0e484bb20487.png)
+
 
 ## Running the app
 
