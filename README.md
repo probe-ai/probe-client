@@ -8,7 +8,7 @@ probe.ai docker client to run in your own environment.
 
 ## Setup BigQuery Connection
 
-1. Download bigquery project config json file from google console
+1. Download bigquery project config json file from google console. [Steps here](https://www.metabase.com/docs/latest/databases/connections/bigquery)
 
 2. Rename json file to `bigquery.json` and paste it on the project root
 
