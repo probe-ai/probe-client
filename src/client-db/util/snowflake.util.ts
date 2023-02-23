@@ -11,10 +11,6 @@ export class SnowflakeUtil implements IClientDb {
     this.connect();
 
     // todo: add option for connection pool
-    try {
-    } catch (error) {
-      throw new Error(`Error connecting to Snowflake: ${error.message}`);
-    }
   }
 
   public async getAllTableNames() {
