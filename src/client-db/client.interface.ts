@@ -4,7 +4,7 @@ import { DbMetadataReqDto } from 'src/dto/tables.dto';
 export interface IClientDb {
   getAllTableNames();
 
-  getDbMetadataForTables(reqDto: DbMetadataReqDto);
+  getDbMetadataForTables(tableNames: string[]);
 
   queryDB(query: string);
 }
