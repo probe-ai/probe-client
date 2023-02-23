@@ -10,9 +10,7 @@ export class BigQueryUtil {
   constructor() {
     // verify bigquery config file
     if (fs.existsSync(this.BIGQUERY_CONFIG_PATH)) {
-      throw new Error(
-        'BigQuery config file is not found. Please refer README.md',
-      );
+      throw new Error('BigQuery config file not found. Please refer README.md');
     }
   }
 
