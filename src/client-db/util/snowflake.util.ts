@@ -1,7 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { createConnection } from 'snowflake-sdk';
+import { IClientDb } from '../client.interface';
 
-export class SnowflakeUtil {
+export class SnowflakeUtil implements IClientDb {
   private connection: any;
 
   constructor() {
@@ -24,7 +25,6 @@ export class SnowflakeUtil {
 
   public async getAllTableNames() {}
   public async getDbMetadataForTables() {}
-  public async toDbMetadataDto() {}
   public async queryDB() {}
 
   private verifyEnv() {
