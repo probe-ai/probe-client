@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ProbeType } from './dto/common.dto';
 import { RunQueryReqDto, RunQueryResDto } from './dto/query.dto';
 import {
   AllTablesResDto,
@@ -9,6 +10,20 @@ import { BigQueryUtil } from './util/bigquery.util';
 
 @Injectable()
 export class AppService {
+  private probeType: ProbeType;
+
+  constructor() {
+    const probeType = process.env.PROBE_TYPE;
+
+    this.probeType = probeType as ProbeType;
+
+    if (!this.probeType) {
+      throw new Error(
+        'TYPE environment variable is not set. Please refer .env.sample',
+      );
+    }
+  }
+
   public async getAllTableNames(): Promise<AllTablesResDto> {
     const tableNames = await BigQueryUtil.getAllTableNames();
 
