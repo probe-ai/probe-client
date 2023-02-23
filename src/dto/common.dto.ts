@@ -5,6 +5,6 @@ export interface ResDto {
 }
 
 export enum ProbeType {
-  SNOWFLAKE = 'snowflake',
-  BIGQUERY = 'bigquery',
+  SNOWFLAKE = 'SNOWFLAKE',
+  BIGQUERY = 'BIGQUERY',
 }
