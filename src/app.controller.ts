@@ -13,24 +13,28 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('health-check')
-  getServerHealth(): ResDto {
+  getServerHealth() // : ResDto
+  {
     return { status: 'success', msg: 'Health OK' };
   }
 
   @Get('tables')
-  async getAllTableNames(): Promise<AllTablesResDto> {
+  async getAllTableNames() // : Promise<AllTablesResDto>
+  {
     return this.appService.getAllTableNames();
   }
 
   @Post('db_metadata')
   async getDbMetadata(
     @Body() reqDto: DbMetadataReqDto,
-  ): Promise<DbMetadataResDto> {
+  ) // : Promise<DbMetadataResDto>
+  {
     return this.appService.getDbMetadata(reqDto);
   }
 
   @Post('run_query')
-  async runQuery(@Body() reqDto: RunQueryReqDto): Promise<RunQueryResDto> {
+  async runQuery(@Body() reqDto: RunQueryReqDto) // : Promise<RunQueryResDto>
+  {
     return this.appService.runQuery(reqDto);
   }
 }
