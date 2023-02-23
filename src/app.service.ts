@@ -6,34 +6,20 @@ import {
   DbMetadataReqDto,
   DbMetadataResDto,
 } from './dto/tables.dto';
-import { BigQueryUtil } from './util/bigquery.util';
-import { SnowflakeUtil } from './util/snowflake.util';
+import { BigQueryUtil } from './client-db/util/bigquery.util';
+import { SnowflakeUtil } from './client-db/util/snowflake.util';
+import { ClientFactory } from './client-db/client.factory';
 
 @Injectable()
 export class AppService {
-  private probeType: ProbeType;
-  private util: SnowflakeUtil | BigQueryUtil;
-
+  private readonly clientDb: BigQueryUtil | SnowflakeUtil;
   constructor() {
-    const probeType = process.env.PROBE_TYPE;
-
-    this.probeType = ProbeType[probeType as keyof typeof ProbeType];
-
-    if (!this.probeType) {
-      throw new Error(
-        'PROBE_TYPE environment variable is not set. Please refer .env.sample',
-      );
-    }
-
-    if (this.probeType === ProbeType.BIGQUERY) {
-      this.util = new BigQueryUtil();
-    } else if (this.probeType === ProbeType.SNOWFLAKE) {
-      this.util = new SnowflakeUtil();
-    }
+    this.clientDb = ClientFactory.getClientDb();
   }
 
-  public async getAllTableNames() { // : Promise<AllTablesResDto>
-    const tableNames = await this.util.getAllTableNames();
+  public async getAllTableNames() {
+    // : Promise<AllTablesResDto>
+    const tableNames = await this.clientDb.getAllTableNames();
 
     return { tableNames };
   }
@@ -41,7 +27,9 @@ export class AppService {
   public async getDbMetadata(
     reqDto: DbMetadataReqDto, // : Promise<DbMetadataResDto>
   ) {
-    const metadata = await this.util.getDbMetadataForTables(reqDto.tableNames);
+    const metadata = await this.clientDb.getDbMetadataForTables(
+      reqDto.tableNames,
+    );
 
     return { metadata };
   }
@@ -50,7 +38,7 @@ export class AppService {
     reqDto: RunQueryReqDto, // : Promise<RunQueryResDto>
   ) {
     try {
-      const queryResults = await this.util.queryDB(reqDto.query);
+      const queryResults = await this.clientDb.queryDB(reqDto.query);
 
       return { status: 'success', queryResults };
     } catch (error) {
