@@ -8,26 +8,10 @@ export class SnowflakeUtil implements IClientDb {
   constructor() {
     this.verifyEnv();
 
+    this.connect();
+
     // todo: add option for connection pool
     try {
-      const connection = createConnection({
-        account: process.env.SNOWFLAKE_ACCOUNT,
-        username: process.env.SNOWFLAKE_USERNAME,
-        password: process.env.SNOWFLAKE_PASSWORD,
-        database: process.env.SNOWFLAKE_DATABASE,
-        schema: process.env.SNOWFLAKE_SCHEMA,
-        warehouse: process.env.SNOWFLAKE_WAREHOUSE,
-      });
-
-      connection.connect((err, conn) => {
-        if (err) {
-          console.log(err);
-
-          throw new Error(`Error connecting to Snowflake: ${err}`);
-        }
-        this.connection = conn;
-        Logger.log('Connected to Snowflake');
-      });
     } catch (error) {
       throw new Error(`Error connecting to Snowflake: ${error.message}`);
     }
@@ -73,5 +57,26 @@ export class SnowflakeUtil implements IClientDb {
         'Snowflake environment variable are not set. Please refer .env.sample',
       );
     }
+  }
+
+  private async connect() {
+    const connection = await createConnection({
+      account: process.env.SNOWFLAKE_ACCOUNT,
+      username: process.env.SNOWFLAKE_USERNAME,
+      password: process.env.SNOWFLAKE_PASSWORD,
+      database: process.env.SNOWFLAKE_DATABASE,
+      schema: process.env.SNOWFLAKE_SCHEMA,
+      warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+    });
+
+    await connection.connect((err, conn) => {
+      if (err) {
+        console.log(err);
+
+        throw new Error(`Error connecting to Snowflake: ${err}`);
+      }
+      this.connection = conn;
+      Logger.log('Connected to Snowflake');
+    });
   }
 }
