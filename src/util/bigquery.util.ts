@@ -2,11 +2,21 @@ import { BigQuery } from '@google-cloud/bigquery';
 import { uniq } from 'lodash';
 import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';
 import { ArrayUtil } from './array.util';
+import fs from 'fs';
 
 export class BigQueryUtil {
-  private static readonly BIGQUERY_CONFIG_PATH = '/usr/src/app/bigquery.json';
+  private readonly BIGQUERY_CONFIG_PATH = '/usr/src/app/bigquery.json';
 
-  public static async getAllTableNames(): Promise<string[]> {
+  constructor() {
+    // verify bigquery config file
+    if (fs.existsSync(this.BIGQUERY_CONFIG_PATH)) {
+      throw new Error(
+        'BigQuery config file is not found. Please refer README.md',
+      );
+    }
+  }
+
+  public async getAllTableNames(): Promise<string[]> {
     const bigquery = new BigQuery({
       keyFilename: this.BIGQUERY_CONFIG_PATH,
     });
@@ -26,7 +36,7 @@ export class BigQueryUtil {
     return uniq(rows.map((r) => r.table_name));
   }
 
-  public static async getDbMetadataForTables(
+  public async getDbMetadataForTables(
     tableNames: string[],
   ): Promise<DbTableMetadataDto[]> {
     const bigquery = new BigQuery({
@@ -51,12 +61,10 @@ export class BigQueryUtil {
 
     const [rows] = await bigquery.query(options);
 
-    return BigQueryUtil.toDbMetadataDto(rows);
+    return this.toDbMetadataDto(rows);
   }
 
-  private static async toDbMetadataDto(
-    rows: any[],
-  ): Promise<DbTableMetadataDto[]> {
+  private async toDbMetadataDto(rows: any[]): Promise<DbTableMetadataDto[]> {
     const nameToMetadataList = ArrayUtil.toHashMapArrays(
       rows,
       (r) => r.table_name,
@@ -82,7 +90,7 @@ export class BigQueryUtil {
     return metadata;
   }
 
-  private static async getSampleData(
+  private async getSampleData(
     tableName: string,
     rowCount: number,
   ): Promise<Record<string, any>[]> {
@@ -102,7 +110,7 @@ export class BigQueryUtil {
     return rows;
   }
 
-  public static async queryDB(query: string): Promise<any[]> {
+  public async queryDB(query: string): Promise<any[]> {
     const bigquery = new BigQuery({
       keyFilename: this.BIGQUERY_CONFIG_PATH,
     });
