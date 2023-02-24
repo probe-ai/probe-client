@@ -44,7 +44,7 @@ Notes:
 
 - Make sure to add network policy to allow access to snowflake from your local machine
 
-  - You can do this by adding a new network policy in the snowflake console, under `Admin > Security ` [Read more](https://docs.snowflake.com/en/user-guide/network-policies)
+  - You can do this by adding a new network policy in the snowflake console, under `Admin > Security `. [Read more](https://docs.snowflake.com/en/user-guide/network-policies)
 
 - After starting the app, wait for connection to be established before running any queries.
   - You can check the status of connection in logs
