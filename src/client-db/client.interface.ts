@@ -1,10 +1,9 @@
-import { DbMetadataReqDto } from 'src/dto/tables.dto';
+import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';
 
-//todo: add return types
 export interface IClientDb {
-  getAllTableNames();
+  getAllTableNames(): Promise<string[]>;
 
-  getDbMetadataForTables(tableNames: string[]);
+  getDbMetadataForTables(tableNames: string[]): Promise<DbTableMetadataDto[]>;
 
-  queryDB(query: string);
+  queryDB(query: string): Promise<any[]>;
 }

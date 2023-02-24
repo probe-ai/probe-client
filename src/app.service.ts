@@ -17,16 +17,15 @@ export class AppService {
     this.clientDb = ClientFactory.getClientDb();
   }
 
-  public async getAllTableNames() {
-    // : Promise<AllTablesResDto>
+  public async getAllTableNames(): Promise<AllTablesResDto> {
     const tableNames = await this.clientDb.getAllTableNames();
 
     return { tableNames };
   }
 
   public async getDbMetadata(
-    reqDto: DbMetadataReqDto, // : Promise<DbMetadataResDto>
-  ) {
+    reqDto: DbMetadataReqDto,
+  ): Promise<DbMetadataResDto> {
     const metadata = await this.clientDb.getDbMetadataForTables(
       reqDto.tableNames,
     );
@@ -34,9 +33,7 @@ export class AppService {
     return { metadata };
   }
 
-  public async runQuery(
-    reqDto: RunQueryReqDto, // : Promise<RunQueryResDto>
-  ) {
+  public async runQuery(reqDto: RunQueryReqDto): Promise<RunQueryResDto> {
     try {
       const queryResults = await this.clientDb.queryDB(reqDto.query);
 
