@@ -26,6 +26,20 @@ Here's an example of bigquery values needed in the .env file that you can find o
 
 2. Copy content of `.env.sample` and update snowflake config accordingly
 
+3, Here;s an example of Snowflake values needed in the .env file that you can find on your Snowflake app:
+
+- `SNOWFLAKE_ACCOUNT`
+<img width="754" alt="image" src="https://user-images.githubusercontent.com/70322519/221108421-fd7d1d5c-097e-40fe-a091-0c7f07d55d11.png">
+
+- `SNOWFLAKE_WAREHOUSE`
+   Get it from Admin Panel under ` Admin > Warehouses `.
+
+- For other variables
+
+<img width="1438" alt="image" src="https://user-images.githubusercontent.com/70322519/221109324-03005acc-a332-4456-85f4-dfd99274a1f6.png">
+
+
+
 Notes:
 
 - Make sure to add network policy to allow access to snowflake from your local machine
