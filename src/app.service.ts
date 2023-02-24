@@ -12,7 +12,7 @@ import { ClientFactory } from './client-db/client.factory';
 
 @Injectable()
 export class AppService {
-  private readonly clientDb: BigQueryUtil | SnowflakeUtil;
+  private readonly clientDb: IClientDb;
   constructor() {
     this.clientDb = ClientFactory.getClientDb();
   }
