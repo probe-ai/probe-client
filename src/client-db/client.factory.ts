@@ -1,5 +1,5 @@
-import { BigQueryUtil } from 'src/client-db/util/bigquery.util';
-import { SnowflakeUtil } from 'src/client-db/util/snowflake.util';
+import { BigQueryUtil } from 'src/client-db/bigquery.util';
+import { SnowflakeUtil } from 'src/client-db/snowflake.util';
 
 export abstract class ClientFactory {
   public static getClientDb() {

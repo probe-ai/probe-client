@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { createConnection } from 'snowflake-sdk';
-import { IClientDb } from '../client.interface';
+import { IClientDb } from './client.interface';
 import { uniq } from 'lodash';
 
 import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';

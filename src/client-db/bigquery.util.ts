@@ -1,9 +1,9 @@
 import { BigQuery } from '@google-cloud/bigquery';
 import { uniq } from 'lodash';
 import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';
-import { ArrayUtil } from './array.util';
+import { ArrayUtil } from '../util/array.util';
 import fs from 'fs';
-import { IClientDb } from '../client.interface';
+import { IClientDb } from './client.interface';
 
 export class BigQueryUtil implements IClientDb {
   private readonly BIGQUERY_CONFIG_PATH = '/usr/src/app/bigquery.json';

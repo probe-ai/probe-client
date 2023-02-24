@@ -6,8 +6,8 @@ import {
   DbMetadataReqDto,
   DbMetadataResDto,
 } from './dto/tables.dto';
-import { BigQueryUtil } from './client-db/util/bigquery.util';
-import { SnowflakeUtil } from './client-db/util/snowflake.util';
+import { BigQueryUtil } from './client-db/bigquery.util';
+import { SnowflakeUtil } from './client-db/snowflake.util';
 import { ClientFactory } from './client-db/client.factory';
 
 @Injectable()
