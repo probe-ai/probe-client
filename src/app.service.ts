@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { ProbeType } from './dto/common.dto';
 import { RunQueryReqDto, RunQueryResDto } from './dto/query.dto';
 import {
   AllTablesResDto,
   DbMetadataReqDto,
   DbMetadataResDto,
 } from './dto/tables.dto';
-import { BigQueryUtil } from './client-db/bigquery.util';
-import { SnowflakeUtil } from './client-db/snowflake.util';
 import { ClientFactory } from './client-db/client.factory';
+import { IClientDb } from './client-db/client.interface';
 
 @Injectable()
 export class AppService {
