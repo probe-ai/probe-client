@@ -3,8 +3,3 @@ export interface ResDto {
   msg?: string;
   error?: string;
 }
-
-export enum ProbeType {
-  SNOWFLAKE = 'SNOWFLAKE',
-  BIGQUERY = 'BIGQUERY',
-}
