@@ -83,7 +83,7 @@ export class SnowflakeUtil implements IClientDb {
   }
 
   private async getSampleData(tableName: string): Promise<any[]> {
-    const query = `SELECT * FROM ${tableName} LIMIT 5;`;
+    const query = `SELECT * FROM ${tableName} LIMIT 2;`;
     const result = await this.queryDB(query);
     return result;
   }
