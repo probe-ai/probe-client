@@ -1,16 +1,32 @@
 import { BigQuery } from '@google-cloud/bigquery';
 import { uniq } from 'lodash';
 import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';
-import { ArrayUtil } from './array.util';
+import { ArrayUtil } from '../util/array.util';
+import fs from 'fs';
+import { IClientDb } from './client.interface';
+import { Logger } from '@nestjs/common';
 
-export class BigQueryUtil {
-  private static readonly BIGQUERY_CONFIG_PATH = '/usr/src/app/bigquery.json';
+export class BigQueryUtil implements IClientDb {
+  private readonly BIGQUERY_CONFIG_PATH = '/usr/src/app/bigquery.json';
+  private readonly bigquery: BigQuery;
 
-  public static async getAllTableNames(): Promise<string[]> {
-    const bigquery = new BigQuery({
-      keyFilename: this.BIGQUERY_CONFIG_PATH,
-    });
+  constructor() {
+    // verify bigquery config file
+    if (fs.existsSync(this.BIGQUERY_CONFIG_PATH)) {
+      throw new Error('BigQuery config file not found. Please refer README.md');
+    }
+    try {
+      this.bigquery = new BigQuery({
+        keyFilename: this.BIGQUERY_CONFIG_PATH,
+      });
+    } catch (error) {
+      throw new Error(
+        `Error while initializing BigQuery client. Error: ${error.message}`,
+      );
+    }
+  }
 
+  public async getAllTableNames(): Promise<string[]> {
     const query = `SELECT
       table_name
     FROM
@@ -21,18 +37,14 @@ export class BigQueryUtil {
       location: process.env.BIGQUERY_PROJECT_LOCATION,
     };
 
-    const [rows] = await bigquery.query(options);
+    const [rows] = await this.bigquery.query(options);
 
     return uniq(rows.map((r) => r.table_name));
   }
 
-  public static async getDbMetadataForTables(
+  public async getDbMetadataForTables(
     tableNames: string[],
   ): Promise<DbTableMetadataDto[]> {
-    const bigquery = new BigQuery({
-      keyFilename: this.BIGQUERY_CONFIG_PATH,
-    });
-
     const query = `SELECT
       table_name,
       column_name,
@@ -49,14 +61,12 @@ export class BigQueryUtil {
       location: process.env.BIGQUERY_PROJECT_LOCATION,
     };
 
-    const [rows] = await bigquery.query(options);
+    const [rows] = await this.bigquery.query(options);
 
-    return BigQueryUtil.toDbMetadataDto(rows);
+    return this.toDbMetadataDto(rows);
   }
 
-  private static async toDbMetadataDto(
-    rows: any[],
-  ): Promise<DbTableMetadataDto[]> {
+  private async toDbMetadataDto(rows: any[]): Promise<DbTableMetadataDto[]> {
     const nameToMetadataList = ArrayUtil.toHashMapArrays(
       rows,
       (r) => r.table_name,
@@ -82,14 +92,10 @@ export class BigQueryUtil {
     return metadata;
   }
 
-  private static async getSampleData(
+  private async getSampleData(
     tableName: string,
     rowCount: number,
   ): Promise<Record<string, any>[]> {
-    const bigquery = new BigQuery({
-      keyFilename: this.BIGQUERY_CONFIG_PATH,
-    });
-
     const query = `SELECT * FROM ${process.env.BIGQUERY_PROJECT}.${process.env.BIGQUERY_DATASET}.${tableName} limit ${rowCount};`;
 
     const options = {
@@ -97,21 +103,17 @@ export class BigQueryUtil {
       location: process.env.BIGQUERY_PROJECT_LOCATION,
     };
 
-    const [rows] = await bigquery.query(options);
+    const [rows] = await this.bigquery.query(options);
 
     return rows;
   }
 
-  public static async queryDB(query: string): Promise<any[]> {
-    const bigquery = new BigQuery({
-      keyFilename: this.BIGQUERY_CONFIG_PATH,
-    });
-
+  public async queryDB(query: string): Promise<any[]> {
     const options = {
       query: query,
       location: process.env.BIGQUERY_PROJECT_LOCATION,
     };
-    const result = await bigquery.query(options);
+    const result = await this.bigquery.query(options);
 
     return result[0];
   }

@@ -5,12 +5,18 @@ import {
   DbMetadataReqDto,
   DbMetadataResDto,
 } from './dto/tables.dto';
-import { BigQueryUtil } from './util/bigquery.util';
+import { ClientFactory } from './client-db/client.factory';
+import { IClientDb } from './client-db/client.interface';
 
 @Injectable()
 export class AppService {
+  private readonly clientDb: IClientDb;
+  constructor() {
+    this.clientDb = ClientFactory.getClientDb();
+  }
+
   public async getAllTableNames(): Promise<AllTablesResDto> {
-    const tableNames = await BigQueryUtil.getAllTableNames();
+    const tableNames = await this.clientDb.getAllTableNames();
 
     return { tableNames };
   }
@@ -18,7 +24,7 @@ export class AppService {
   public async getDbMetadata(
     reqDto: DbMetadataReqDto,
   ): Promise<DbMetadataResDto> {
-    const metadata = await BigQueryUtil.getDbMetadataForTables(
+    const metadata = await this.clientDb.getDbMetadataForTables(
       reqDto.tableNames,
     );
 
@@ -27,7 +33,7 @@ export class AppService {
 
   public async runQuery(reqDto: RunQueryReqDto): Promise<RunQueryResDto> {
     try {
-      const queryResults = await BigQueryUtil.queryDB(reqDto.query);
+      const queryResults = await this.clientDb.queryDB(reqDto.query);
 
       return { status: 'success', queryResults };
     } catch (error) {
