@@ -147,8 +147,6 @@ export class SnowflakeUtil implements IClientDb {
 
     await connection.connect((err, conn) => {
       if (err) {
-        console.log(err);
-
         throw new Error(`Error connecting to Snowflake: ${err}`);
       }
       this.connection = conn;
