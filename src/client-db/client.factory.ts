@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { BigQueryUtil } from 'src/client-db/bigquery.util';
 import { SnowflakeUtil } from 'src/client-db/snowflake.util';
+import { ElasticSearchUtil } from './elasticsearch.util';
 import { MySQLUtil } from './mysql.util';
 import { PostgresUtil } from './postgres.util';
 
@@ -17,6 +18,9 @@ export abstract class ClientFactory {
     }
     if (process.env.MYSQL_HOST) {
       return new MySQLUtil();
+    }
+    if (process.env.ES_CLOUD_ID) {
+      return new ElasticSearchUtil();
     }
     throw new Error('No client DB found. Please refer README.md');
   }
