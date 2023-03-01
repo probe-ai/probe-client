@@ -37,7 +37,8 @@ Here's an example of bigquery values needed in the .env file that you can find o
 3, Here;s an example of Snowflake values needed in the .env file that you can find on your Snowflake app:
 
 - `SNOWFLAKE_ACCOUNT`
-  <img width="754" alt="image" src="https://user-images.githubusercontent.com/70322519/221108421-fd7d1d5c-097e-40fe-a091-0c7f07d55d11.png">
+ <img width="828" alt="image" src="https://user-images.githubusercontent.com/70322519/222150606-320403c9-37ce-4a0d-9abc-bf7589c7d603.png">
+
 
 - `SNOWFLAKE_WAREHOUSE`
   Get it from Admin Panel under `Admin > Warehouses`.
