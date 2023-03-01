@@ -6,6 +6,14 @@
 
 probe.ai docker client to run in your own environment.
 
+## Quick Links
+
+- [Setup BigQuery Connection](#setup-bigquery-connection)
+- [Setup Snowflake Connection](#setup-snowflake-connection)
+- [Setup Postgres Connection](#setup-postgres-connection)
+- [Running the app](#running-the-app)
+- [Updating the app](#updating-the-app)
+
 ## Setup BigQuery Connection
 
 1. Download bigquery project config json file from google console. [Steps here](https://www.metabase.com/docs/latest/databases/connections/bigquery)
@@ -29,16 +37,15 @@ Here's an example of bigquery values needed in the .env file that you can find o
 3, Here;s an example of Snowflake values needed in the .env file that you can find on your Snowflake app:
 
 - `SNOWFLAKE_ACCOUNT`
-<img width="754" alt="image" src="https://user-images.githubusercontent.com/70322519/221108421-fd7d1d5c-097e-40fe-a091-0c7f07d55d11.png">
+ <img width="828" alt="image" src="https://user-images.githubusercontent.com/70322519/222150606-320403c9-37ce-4a0d-9abc-bf7589c7d603.png">
+
 
 - `SNOWFLAKE_WAREHOUSE`
-   Get it from Admin Panel under ` Admin > Warehouses `.
+  Get it from Admin Panel under `Admin > Warehouses`.
 
 - For other variables
 
 <img width="1438" alt="image" src="https://user-images.githubusercontent.com/70322519/221109324-03005acc-a332-4456-85f4-dfd99274a1f6.png">
-
-
 
 Notes:
 
@@ -48,6 +55,12 @@ Notes:
 
 - After starting the app, wait for connection to be established before running any queries.
   - You can check the status of connection in logs
+
+## Setup Postgres Connection
+
+1. Create new file in project root `.env`
+
+2. Copy content of `.env.sample` and update postgres config accordingly
 
 ## Running the app
 

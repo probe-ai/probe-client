@@ -136,8 +136,11 @@ export class SnowflakeUtil implements IClientDb {
 
   private async connect() {
     // todo: add option for connection pool
+    const account = process.env.SNOWFLAKE_ACCOUNT;
+    const account_ = account.split('.');
+    const SNOWFLAKE_ACCOUNT = account_[0] + '-' + account_[1];
     const connection = await createConnection({
-      account: process.env.SNOWFLAKE_ACCOUNT,
+      account: SNOWFLAKE_ACCOUNT,
       username: process.env.SNOWFLAKE_USERNAME,
       password: process.env.SNOWFLAKE_PASSWORD,
       database: process.env.SNOWFLAKE_DATABASE,
@@ -147,8 +150,6 @@ export class SnowflakeUtil implements IClientDb {
 
     await connection.connect((err, conn) => {
       if (err) {
-        console.log(err);
-
         throw new Error(`Error connecting to Snowflake: ${err}`);
       }
       this.connection = conn;
