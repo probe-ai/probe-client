@@ -4,6 +4,7 @@ import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';
 import { ArrayUtil } from '../util/array.util';
 import fs from 'fs';
 import { IClientDb } from './client.interface';
+import moment from 'moment';
 
 export class BigQueryUtil implements IClientDb {
   private readonly BIGQUERY_CONFIG_PATH = '/usr/src/app/bigquery.json';
@@ -83,7 +84,27 @@ export class BigQueryUtil implements IClientDb {
         columns: metadataList.map((m) => ({
           name: m.column_name,
           type: m.data_type,
-          sampleData: sampleData.map((d) => String(d[m.column_name])),
+          sampleData: sampleData.map((d) => {
+            if (m.data_type === 'TIMESTAMP') {
+              return String(d[m.column_name].value);
+            } else if (m.data_type === 'DATE') {
+              return moment.utc(d[m.column_name].value).format('YYYY-MM-DD');
+            } else if (m.data_type === 'TIME') {
+              return moment.utc(d[m.column_name].value).format('HH:mm:ss.SSS');
+            } else if (m.data_type === 'DATETIME') {
+              return moment
+                .utc(d[m.column_name].value)
+                .format('YYYY-MM-DD HH:mm:ss.SSS');
+            } else if (m.data_type === 'GEOGRAPHY') {
+              return JSON.stringify(d[m.column_name].value);
+            } else if (m.data_type === 'ARRAY') {
+              return JSON.stringify(d[m.column_name].value);
+            } else if (m.data_type === 'STRUCT') {
+              return JSON.stringify(d[m.column_name].value);
+            } else {
+              return String(d[m.column_name]);
+            }
+          }),
         })),
       });
     }

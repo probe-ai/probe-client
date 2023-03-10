@@ -2,8 +2,11 @@ import { Logger } from '@nestjs/common';
 import { Pool } from 'pg';
 import { DbTableMetadataDto } from 'src/dto/db-metadata.dto';
 import { IClientDb } from './client.interface';
+import * as moment from 'moment';
 
 export class PostgresUtil implements IClientDb {
+  private readonly logger = new Logger(PostgresUtil.name);
+
   private pool: Pool;
 
   constructor() {
@@ -17,8 +20,9 @@ export class PostgresUtil implements IClientDb {
         password: process.env.POSTGRES_PASSWORD,
         port: parseInt(process.env.POSTGRES_PORT),
       });
+      this.logger.log(`Postgres connected successfully`);
     } catch (err) {
-      Logger.error('Error connecting to Postgres: ' + err.message);
+      this.logger.log(`Error connecting to Postgres: ${err.message}`);
     }
   }
 
@@ -47,13 +51,15 @@ export class PostgresUtil implements IClientDb {
       AND
         table_name NOT LIKE 'pg_%'
       AND
-        table_name NOT LIKE 'sql_%';`;
+        table_name NOT LIKE 'sql_%'
+      AND
+        table_name NOT LIKE 'Sequelize%';`;
 
     const result = await this.queryDB(query);
 
     const resWithoutData = await this.mapTableMetadata(result);
 
-    return await this.mapSampleData(resWithoutData);
+    return this.mapSampleData(resWithoutData);
   }
 
   public async queryDB(query: string): Promise<any[]> {
@@ -110,14 +116,27 @@ export class PostgresUtil implements IClientDb {
   ): Promise<DbTableMetadataDto[]> {
     await Promise.all(
       result.map(async (table) => {
-        const query = `SELECT * FROM ${table.tableName} LIMIT 2;`;
+        const query = `SELECT * FROM "${table.tableName}" LIMIT 2;`;
         const sampleData = await this.queryDB(query);
 
         table.columns.map((column) => {
-          column.sampleData.push(...sampleData.map((row) => row[column.name]));
+          column.sampleData.push(
+            ...sampleData.map((d) => {
+              if (column.type === 'date') {
+                return moment(d[column.name]).format('YYYY-MM-DD');
+              } else if (column.type.startsWith('time')) {
+                return moment(d[column.name]).format('YYYY-MM-DD HH:mm:ss.SSS');
+              } else if (['array', 'json', 'jsonb'].includes(column.type)) {
+                return JSON.stringify(d[column.name]);
+              } else {
+                return String(d[column.name]);
+              }
+            }),
+          );
         });
       }),
     );
+
     return result;
   }
 
